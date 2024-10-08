@@ -10,18 +10,18 @@ const __dirname = path.dirname(__filename);
 // 检查文件是否位于子模块中
 function isSubmodule(file) {
   const submoduleConfig = path.join(__dirname, '../.gitmodules');
-  
+
   console.log(`Checking if the file ${file} is in a submodule...`);
 
   if (fs.existsSync(submoduleConfig)) {
     console.log(`Found .gitmodules file at ${submoduleConfig}`);
     const configContent = fs.readFileSync(submoduleConfig, 'utf8');
     const isSub = configContent.includes(path.basename(path.dirname(file)));
-    
+
     console.log(`Is ${file} in a submodule? ${isSub}`);
     return isSub;
   }
-  
+
   console.log(`No .gitmodules file found, assuming ${file} is not in a submodule.`);
   return false;
 }
@@ -29,24 +29,24 @@ function isSubmodule(file) {
 // 获取某个文件的最后一次 Git 提交时间（包括处理子模块）
 function getLastGitCommitTime(file) {
   let result;
-  
+
   console.log(`Getting last Git commit time for file: ${file}`);
-  
+
   if (isSubmodule(file)) {
     // 如果文件在子模块中，进入子模块目录获取提交时间
     const submodulePath = path.dirname(file);
     console.log(`File ${file} is in a submodule. Running git log in ${submodulePath}`);
-    
+
     result = execSync(`git log -1 --format="%ad" -- ${path.basename(file)}`, { cwd: submodulePath }).toString().trim();
   } else {
     // 文件不在子模块，正常获取提交时间
     console.log(`File ${file} is not in a submodule. Running git log in the main repo.`);
-    
+
     result = execSync(`git log -1 --format="%ad" -- ${file}`).toString().trim();
   }
 
   console.log(`Commit time for ${file}: ${result}`);
-  
+
   return new Date(result);
 }
 
@@ -66,11 +66,11 @@ function generateSidebar(subDir, blacklist = []) {
     .map(file => {
       const name = file.replace('.md', '');
       const fullPath = path.join(dir, file);
-      
+
       console.log(`Processing file: ${file} (Full path: ${fullPath})`);
 
       const commitTime = getLastGitCommitTime(fullPath); // 获取 Git 提交时间
-      
+
       return {
         text: name,
         link: `/${subDir}/${name}`, // 动态生成链接，指向传入的子目录
@@ -81,7 +81,7 @@ function generateSidebar(subDir, blacklist = []) {
   files.sort((a, b) => b.commitTime - a.commitTime); // 按提交时间排序
 
   console.log(`Sorted files by commit time:`, files.map(f => f.text));
-  
+
   return files.map(({ text, link }) => ({ text, link }));
 }
 
@@ -95,9 +95,8 @@ export default defineConfig({
   title: "Ming's Blog",
   description: "",
   cleanUrls: true,
-  markdown: { math: true },
   ignoreDeadLinks: true,
-
+  markdown: { attrs: { disable: true }, math: true },
   head: [
     ['link', { rel: 'icon', href: '/icons.png' }]
   ],
