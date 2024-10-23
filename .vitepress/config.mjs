@@ -121,7 +121,7 @@ export default defineConfig({
         icon: {
           svg: '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12.713l-11.99-7.06v14.12h23.98v-14.12l-11.99 7.06zm0-1.427l11.99-7.06h-23.98l11.99 7.06zm-12 10.52h24v-16.973l-12 7.07-12-7.07v16.973z"/></svg>'
         },
-        link: 'mailto:liym817@gmail.com',
+        link: 'mailto:yli2467-c@my.cityu.edu.hk',
         ariaLabel: 'Email'
       }
     ],
